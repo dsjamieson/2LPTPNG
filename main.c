@@ -1,7 +1,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <drfftw_mpi.h>
+#include <rfftw_mpi.h>
 #include <mpi.h>
 #include <gsl/gsl_rng.h>
 
@@ -100,7 +100,13 @@ void displacement_fields(void)
   double f1, f2, f3, f4, f5, f6, f7, f8;
   double dis, dis2, maxdisp, max_disp_glob;
   unsigned int *seedtable;
- 
+// *************************** DSJ *******************************
+  double exp_1_over_3, exp_1_over_6, kmag_1_over_3, kmag_2_over_3;
+// *************************** DSJ *******************************
+// ******* FAVN *****
+  double phase_shift; 
+// ******* FAVN *****
+
   double phase2; 
   double twb;
   unsigned int bytes, nmesh3;
@@ -153,9 +159,18 @@ void displacement_fields(void)
   vel_prefac /= sqrt(InitTime);	/* converts to Gadget velocity */
   vel_prefac2 /= sqrt(InitTime);
 
-  if(ThisTask == 0)
+
+// ******************************************** FAVN **********************************************
+  phase_shift = 0.0;
+  if (PhaseFlip==1)
+  	phase_shift = PI;
+
+  if(ThisTask == 0){
     printf("vel_prefac= %g, vel_prefac2= %g,  hubble_a=%g fom=%g \n", vel_prefac, vel_prefac2, 
                                                                       hubble_a, F_Omega(InitTime));
+    printf("Phase shift = %.7f\n\n",phase_shift);
+  }
+// ******************************************** FAVN **********************************************
 
   fac = pow(2 * PI / Box, 1.5);
 
@@ -246,6 +261,9 @@ void displacement_fields(void)
 		  for(k = 0; k < Nmesh / 2; k++)
 		    {
 		      phase = gsl_rng_uniform(random_generator) * 2 * PI;
+//************ FAVN ***************
+              phase += phase_shift;
+//************ FAVN ***************
 		      do
 			ampl = gsl_rng_uniform(random_generator);
 		      while(ampl == 0);
@@ -288,9 +306,11 @@ void displacement_fields(void)
 			    continue;
 			}
 		      
-		      p_of_k = PowerSpec(kmag);
-		      
-		      p_of_k *= -log(ampl);
+		      p_of_k = PowerSpec(kmag);	      
+// ************ FAVN/DSJ ************
+			  if (!FixedAmplitude)
+		        p_of_k *= -log(ampl);
+// ************ FAVN/DSJ ************
 		      
 		      delta = fac * sqrt(p_of_k) / Dplus;	/* scale back to starting redshift */
 		      
@@ -400,7 +420,10 @@ void displacement_fields(void)
 
                                                                 /* Ho in units of h/Mpc and c=1, i.e., internal units so far  */
       Beta = 1.5 * Omega / FnlTime / (2998. * 2998. );          /* Beta = 3/2 H(z)^2 a^2 Om(a) = 3/2 Ho^2 Om0 / a */ 
-
+// ******************* DSJ ***********************
+	  exp_1_over_3 = (4. - PrimordialIndex) / 3.; // n_s modified exponent for generalized laplacian/inverse laplacian, exponent for k^2
+	  exp_1_over_6 = (4. - PrimordialIndex) / 6.; // n_s modified exponent for generalized conjugate gradient magnitude and its inverse, exponent for k^2 
+// ******************* DSJ ***********************
 
       for(i = 0; i < Nmesh; i++)
         {
@@ -662,7 +685,10 @@ void displacement_fields(void)
                         kvec[2] = -(Nmesh - k) * 2 * PI / Box;
 
                       kmag2 = kvec[0] * kvec[0] + kvec[1] * kvec[1] + kvec[2] * kvec[2];
-                      kmag = sqrt(kmag2);
+// ****************************** DSJ *************************
+					  kmag_2_over_3 = pow(kmag2, exp_1_over_3);                      
+					  kmag_1_over_3 = pow(kmag2, exp_1_over_6);                      
+// ****************************** DSJ *************************
 
                       cpartpot[coord].re = kmag * cpot[coord].re;
                       cpartpot[coord].im = kmag * cpot[coord].im;
@@ -783,9 +809,11 @@ void displacement_fields(void)
                         kvec[2] = -(Nmesh - k) * 2 * PI / Box;
 
                       kmag2 = kvec[0] * kvec[0] + kvec[1] * kvec[1] + kvec[2] * kvec[2];
-                      kmag = sqrt(kmag2);
+// ****************************** DSJ *************************
+					  kmag_2_over_3 = pow(kmag2, exp_1_over_3);                      
+					  kmag_1_over_3 = pow(kmag2, exp_1_over_6);
+// ****************************** DSJ *************************
                       
-              
                       if(i == 0 && j == 0 && k == 0)
                         {
                           cpot[0].re=0.;
@@ -793,28 +821,25 @@ void displacement_fields(void)
                           continue;
                         }
                       
-     
-
 #ifdef EQUIL_FNL
       /* fnl equilateral */
-          
-              cpot[coord].re = cpot[coord].re + Fnl * (-3*cpartpot[coord].re - 2*cp1p2p3sym[coord].re / kmag2 + 4*cp1p2p3sca[coord].re /kmag + 2*cp1p2p3nab[coord].re / kmag2);
-              cpot[coord].im = cpot[coord].im + Fnl * (-3*cpartpot[coord].im - 2*cp1p2p3sym[coord].im / kmag2 + 4*cp1p2p3sca[coord].im /kmag + 2*cp1p2p3nab[coord].im / kmag2); 
+// ****************************************************************************************** DSJ ********************************************************************************************************
+              cpot[coord].re = cpot[coord].re + Fnl * (-3*cpartpot[coord].re - 2*cp1p2p3sym[coord].re / kmag_2_over_3 + 4*cp1p2p3sca[coord].re / kmag_1_over_3 + 2*cp1p2p3nab[coord].re / kmag_2_over_3);
+              cpot[coord].im = cpot[coord].im + Fnl * (-3*cpartpot[coord].im - 2*cp1p2p3sym[coord].im / kmag_2_over_3 + 4*cp1p2p3sca[coord].im / kmag_1_over_3 + 2*cp1p2p3nab[coord].im / kmag_2_over_3); 
+// ****************************************************************************************** DSJ ********************************************************************************************************
               cpot[coord].re /= (double) nmesh3; 
               cpot[coord].im /= (double) nmesh3; 
-
-
 #endif
 
 #ifdef ORTOG_FNL 
-
-              cpot[coord].re = cpot[coord].re + Fnl * (-9*cpartpot[coord].re - 8*cp1p2p3sym[coord].re / kmag2 + 10*cp1p2p3sca[coord].re /kmag + 8*cp1p2p3nab[coord].re / kmag2);
-              cpot[coord].im = cpot[coord].im + Fnl * (-9*cpartpot[coord].im - 8*cp1p2p3sym[coord].im / kmag2 + 10*cp1p2p3sca[coord].im /kmag + 8*cp1p2p3nab[coord].im / kmag2);
+// ****************************************************************************************** DSJ ********************************************************************************************************
+              cpot[coord].re = cpot[coord].re + Fnl * (-9*cpartpot[coord].re - 8*cp1p2p3sym[coord].re / kmag_2_over_3 + 10*cp1p2p3sca[coord].re / kmag_1_over_3 + 8*cp1p2p3nab[coord].re / kmag_2_over_3);
+              cpot[coord].im = cpot[coord].im + Fnl * (-9*cpartpot[coord].im - 8*cp1p2p3sym[coord].im / kmag_2_over_3 + 10*cp1p2p3sca[coord].im / kmag_1_over_3 + 8*cp1p2p3nab[coord].im / kmag_2_over_3);
+// ****************************************************************************************** DSJ ********************************************************************************************************
               cpot[coord].re /= (double) nmesh3; 
               cpot[coord].im /= (double) nmesh3; 
-
 #endif
-
+     
                       if(i == 0 && j == 0 && k == 0)
                         {
                           cpot[0].re=0.;

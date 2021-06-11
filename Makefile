@@ -11,7 +11,7 @@ INCL   = allvars.h proto.h  nrsrc/nrutil.h  Makefile
                           # for a single DM species in the input file by interleaved by a half a grid spacing
                           # only for Gaussian and ZA
 
-#OPT   +=  -DMULTICOMPONENTGLASSFILE  # set this if the initial glass file contains multiple components
+OPT   +=  -DMULTICOMPONENTGLASSFILE  # set this if the initial glass file contains multiple components
                                       # only for Gaussian and ZA
 
 #OPT   +=  -DDIFFERENT_TRANSFER_FUNC  # set this if you want to implement a transfer function that depends on
@@ -39,10 +39,10 @@ OPTIONS =  $(OPT)
 #
 GSL_INCL= -I/usr/local/gsl_gcc_mpi/include
 GSL_LIBS= -L/usr/local/gsl_gcc_mpi/lib
-FFTW_INCL= -I/usr/local/fftw_gcc/include
-FFTW_LIBS= -L/usr/local/fftw_gcc/lib
+FFTW_INCL= -I/mnt/home/ajamieson/ceph/Software/Source/Test_Roman_2LPT_PNG/fftw2/include
+FFTW_LIBS= -L/mnt/home/ajamieson/ceph/Software/Source/Test_Roman_2LPT_PNG/fftw2/lib
 
-CC       =  /usr/local/mpich_gcc/bin/mpicc #-g -Wall -fbounds-check    # sets the C-compiler (default)
+CC       = mpicc #-g -Wall -fbounds-check    # sets the C-compiler (default)
 MPICHLIB = -L/usr/local/mpich_gcc/lib
 
 #CC       =  /usr/local/mpich_intel/bin/mpicc -g -Wall -fbounds-check    # sets the C-compiler (default)
@@ -52,7 +52,8 @@ MPICHLIB = -L/usr/local/mpich_gcc/lib
 OPTIMIZE =   -O3 -Wall    # optimization and warning flags (default)
 
 
-FFTW_LIB =  $(FFTW_LIBS) -ldrfftw_mpi -ldfftw_mpi -ldrfftw -ldfftw
+#FFTW_LIB =  $(FFTW_LIBS) -ldrfftw_mpi -ldfftw_mpi -ldrfftw -ldfftw
+FFTW_LIB =  $(FFTW_LIBS) -lrfftw_mpi -lfftw_mpi -lrfftw -lfftw
 
 LIBS   =   -lm  $(MPICHLIB)  $(FFTW_LIB)  $(GSL_LIBS)  -lgsl -lgslcblas
 

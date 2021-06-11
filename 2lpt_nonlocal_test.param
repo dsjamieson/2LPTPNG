@@ -46,12 +46,11 @@ SphereMode       0         % if "1" only modes with |k| < k_Nyquist are
           
                            % "0" to not use the power spectrum only transfer file
 WhichSpectrum    0         % "1" selects Eisenstein & Hu spectrum,
-		           % "2" selects a tabulated power spectrum in
+		                   % "2" selects a tabulated power spectrum in
                            % the file 'FileWithInputSpectrum'
                            % otherwise, Efstathiou parametrization is used
-                           % Non-Gaussian case requires "0" value,i.e, using Tranfer Function 
+                           % Fnl != 0. requires "0" value, i.e, using Tranfer Function 
 
-                  
 FileWithInputSpectrum    /export/chichipio2/mm3812/NBody/inputs/input_spectrum.dat 
                                                                          % filename of tabulated input
                                                                          % expecting logk logDk 
@@ -65,8 +64,6 @@ InputSpectrum_UnitLength_in_cm  3.085678e24 % defines length unit of tabulated
 
 ShapeGamma       0.21     % only needed for Efstathiou power spectrum 
 PrimordialIndex  1.0      % may be used to tilt the primordial index, needed for nongaussian inital potential
-                          % PrimordialIndex different than one implemented only for Gaussian, and *Local* Non-Gaussian.
-                          % Further version is expected where primordial not index will be implemented in all cases
 
 WhichTransfer    2        % "1" selects EH Transfer function 
                           % "2" selects Transfer function from Transfer file -recomended-
@@ -74,7 +71,6 @@ WhichTransfer    2        % "1" selects EH Transfer function
                           % otherwise Efstathiou Tk 
                           % other options not properly implemented yet 
                           % For NonLocal Models set WhithSpectrum = 0 and 
-
 
 FileWithInputTransfer     /export/chichipio2/mm3812/NBody/inputs/input_transfer.dat  
                                                             % now input is k ad T, program normalizes.  

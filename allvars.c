@@ -44,6 +44,10 @@ double Redshift;
 double RedshiftFnl;
 double MassTable[6];
 double Fnl; 
+// *** FAVN/DSJ ***
+int FixedAmplitude;
+int PhaseFlip;
+// *** FAVN/DSJ ***
 
 char OutputDir[100], FileBase[100];
 int NumFilesWrittenInParallel;

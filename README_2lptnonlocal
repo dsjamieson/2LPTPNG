@@ -1,4 +1,8 @@
-                                   
+README by Drew Jamieson 11 June 2021
+
+Added n_s != 1 capability for PNG cases                                   
+
+
 README by Marc Manera 15 Dec 2012
 
 The code outputs particle positions and velocities of a matter field 

@@ -72,6 +72,16 @@ void read_parameterfile(char *fname)
   addr[nt] = &Fnl;
   id[nt++] = FLOAT;
 
+// ********** FAVN/DSJ  ************
+  strcpy(tag[nt], "FixedAmplitude");
+  addr[nt] = &FixedAmplitude;
+  id[nt++] = INT;
+
+  strcpy(tag[nt], "PhaseFlip");
+  addr[nt] = &PhaseFlip;
+  id[nt++] = INT;
+// ********** FAVN/DSJ  ************
+
   strcpy(tag[nt], "Nmesh");
   addr[nt] = &Nmesh;
   id[nt++] = INT;

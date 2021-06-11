@@ -1,4 +1,4 @@
-#include <drfftw_mpi.h>
+#include <rfftw_mpi.h>
 
 #define  PI          3.14159265358979323846 
 #define  GRAVITY     6.672e-8
@@ -99,6 +99,10 @@ extern double Redshift;
 extern double RedshiftFnl;
 extern double MassTable[6];
 extern double Fnl;
+// ******* FAVN/DSJ ******
+extern int FixedAmplitude;
+extern int PhaseFlip;
+// ******* FAVN/DSJ ******
 
 extern char OutputDir[100], FileBase[100];
 extern int  NumFilesWrittenInParallel;
