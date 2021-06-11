@@ -1,0 +1,97 @@
+
+Nmesh         280          % This is the size of the FFT grid used to 
+                           % compute the displacement field. One
+                           % should have Nmesh >= Nsample.
+
+Nsample       280          % sets the maximum k that the code uses,
+                           % i.e. this effectively determines the
+                           % Nyquist frequency that the code assumes,
+                           % k_Nyquist = 2*PI/Box * Nsample/2
+                           % Normally, one chooses Nsample such that
+                           % Ntot =  Nsample^3, where Ntot is the
+                           % total number of particles
+ 
+
+Box             1200.0    % Periodic box size of simulation
+
+FileBase         ics_nonlocal_test          % Base-filename of output files
+OutputDir        /export/chichipio2/mm3812/NBody/output  % Directory for output
+
+GlassFile        /export/chichipio2/mm3812/NBody/inputs/glass1_le 
+GlassTileFac   180 
+
+
+Omega            0.25       % Total matter density  (at z=0)
+OmegaLambda      0.75       % Cosmological constant (at z=0)
+OmegaBaryon      0.04      % Baryon density        (at z=0)
+OmegaDM_2ndSpecies  0      % Omega for a second dark matter species (at z=0)
+HubbleParam      0.7       % Hubble paramater (may be used for power spec parameterization)
+
+Redshift         49.        % Starting redshift
+RedshiftFnl      49.        % Redshift when nongaussian fnl potential is computed
+
+Sigma8           0.8       % power spectrum normalization
+
+Fnl              0.0       % value of the f_nl for Local,Equilateral or Orthogonal 
+                           % normalized as in Scoccimarro Hui Manera Chan 2011  
+
+SphereMode       0         % if "1" only modes with |k| < k_Nyquist are
+                           % used (i.e. a sphere in k-space), otherwise modes with
+                           % |k_x|,|k_y|,|k_z| < k_Nyquist are used
+                           % (i.e. a cube in k-space)
+                           % do NOT use it for non-gaussian models
+          
+                           % "0" not use power spectrum only transfer file
+WhichSpectrum    0         % "1" selects Eisenstein & Hu spectrum,
+		           % "2" selects a tabulated power spectrum in
+                           % the file 'FileWithInputSpectrum'
+                           % otherwise, Efstathiou parametrization is used
+
+                  
+FileWithInputSpectrum    /export/chichipio2/mm3812/NBody/inputs/input_spectrum.dat 
+                                                                         % filename of tabulated input
+                                                                         % expecting logk logPk 
+                                                                       
+                                            % spectrum (if used)
+InputSpectrum_UnitLength_in_cm  3.085678e24 % defines length unit of tabulated
+                                            % input spectrum in cm/h. 
+                                            % Note: This can be chosen different from UnitLength_in_cm
+    
+
+ShapeGamma       0.21     % only needed for Efstathiou power spectrum 
+PrimordialIndex  1.0      % may be used to tilt the primordial index, needed for nongaussian inital potential
+
+WhichTransfer    2        % "3" selects Transfer function deduced from Power Spectrum 
+                          % "2" selects Transfer function from Transfer file
+                          % "1" selects EH Transfer function 
+                          % other options not properly implemented yet 
+
+FileWithInputTransfer     /export/chichipio2/mm3812/NBody/inputs/input_transfer.dat  
+                                                            % now input is k ad T, program normalizes.  
+
+Seed             5001    %  Seed for IC-generator
+
+
+NumFilesWrittenInParallel 4  % limits the number of files that are
+                              % written in parallel when outputting
+
+
+UnitLength_in_cm          3.085678e24   % defines length unit of output (in cm/h) 
+UnitMass_in_g             1.989e43      % defines mass unit of output (in g/cm)
+UnitVelocity_in_cm_per_s  1e5           % defines velocity unit of output (in cm/sec)
+
+
+
+WDM_On               0      % Putting a '1' here will enable a WDM small-scale
+                            % smoothing of the power spectrum
+
+WDM_Vtherm_On        0      % If set to '1', the (warm) dark matter particles will
+                            % receive an additional dom thermal velocity
+                            % corresponding to their particle mass
+
+WDM_PartMass_in_kev  10.0   % This is the particle mass in keV of the WDM particle
+
+
+
+
+

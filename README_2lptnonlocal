@@ -1,0 +1,73 @@
+                                   
+README by Marc Manera 15 Dec 2012
+
+The code outputs particle positions and velocities of a matter field 
+as given by 2LPT (2nd order Lagrangian perturbation theory). 
+The code has been modified such that Initial Conditions 
+for primordial (non-local) non-gaussianities can be generated. 
+The method implemented is explained in Scoccimarro, Hui, Manera 
+and Chan 2012 (SHMC11) PRD 85, 083002: arXiv:1108.5512
+
+Note that that sigma8 will be computed integrating over the 
+range of k provided in the input file, up to k = 500./8 (h/Mpc).   
+In some cases the code will issue a warning stating that the
+range of integration may be enlarged. 
+
+The input transfer function is automatically normalized to one 
+at the lowest value of k. This allows to input an un-normalized
+transfer function. The lowest value of k should be small enough that
+normalizing T(k_lowest)=1 does not significantly change sigma8. 
+
+CHANGES from version 1 Jan 2012
+
+The first version of the code gave incorrect displacements
+when running with a Primordial Spectral Index, ns, different than one. 
+For Local Non-Gaussian runs, using the Transfer Function as an input, 
+the results had an effective spectral index neff as (1-neff) = 2(1-ns). 
+
+For Non-Local Non-Gaussian runs the code was missing a line, 
+giving zero displacements in most cases. This has been corrected. 
+Notice that Non-Local Non-Gaussian runs with ns!=1 are not yet implemented. 
+If trying, the code will now exit with a warning. 
+
+The weird combined option WhichSpectrum = 2 with WhichTransfer = 3, 
+gave un-normalized results and have been deprecated.
+
+The power spectrum normalization now follows a more standard convention. 
+The input options have been simplified by requiring only the transfer function
+when running in Non-Gaussian mode.
+ 
+-------
+
+To run the program:
+
+a) Adapt the Makefile to your needs
+   - I added flags for 4 cases:
+      Gaussian,local,equilateral and orthogonal model (see SHMC11) 
+      Just turn on the one the flags you need. And set the Fnl value in the parameters file
+   - You can run with ZA Initial Conditions (IC) if you like. This is another flag
+
+b) The param file asks for:
+    - Two redshifts: one is when the nonlocal potential is calculated,
+       the other is the redshift of the 2LPT IC output. This is mainly set for 
+       future development. If you want to generate IC at redshifts bigger or close to 50 
+       run the code setting both redshifts to the same value. 
+    - An input power spectrum and an input transfer function file
+      you need to put two filenames, but only one is used. 
+      For Gaussian runs you can use either the power spectrum or the transfer function.
+      For the non-Gaussian runs you can only use the transfer function as input. 
+      If running with Gaussian and ns!=1, the input power spectrum should not have the tilt.
+      Thus it is recommended to use always the transfer function as input when ns!=1. 
+    - Fnl value
+    - Other parameters and paths
+    - Notice that Sphere mode is deprecated for Non-gaussian runs. It will be implemented
+      in a new version.  
+
+c) If you want to change de coefficients of the equilateral or the orthogonal model go to lines
+      798 or 809 respectively.
+
+d) In the near future we plan to release a new version for a generic non-local non-gaussian 
+   separable bispectrum. 
+
+e) The code comes with no warranty, and a non-commercial license (see the website)
+   For enquiries email marc.manera@port.ac.uk

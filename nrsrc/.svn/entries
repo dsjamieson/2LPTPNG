@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="1674"
+   name=""
+   committed-date="2005-05-26T17:14:20.000000Z"
+   url="http://www.mpa-garching.mpg.de/svn/cosmo-group/N-GenIC/nrsrc"
+   last-author="volker"
+   kind="dir"
+   uuid="019ef673-9300-0410-806d-f16013bd1951"
+   revision="2377"/>
+<entry
+   committed-rev="1674"
+   name="qromb.c"
+   text-time="2005-10-03T17:49:22.000000Z"
+   committed-date="2005-05-26T17:14:20.000000Z"
+   checksum="f697bdb409e17446f81af00304a00129"
+   last-author="volker"
+   kind="file"
+   prop-time="2005-10-03T17:49:22.000000Z"/>
+<entry
+   committed-rev="1674"
+   name="nrutil.h"
+   text-time="2005-10-03T17:49:22.000000Z"
+   committed-date="2005-05-26T17:14:20.000000Z"
+   checksum="ddf348c5e44620ad79110b9b96b19e00"
+   last-author="volker"
+   kind="file"
+   prop-time="2005-10-03T17:49:22.000000Z"/>
+<entry
+   committed-rev="1674"
+   name="trapzd.c"
+   text-time="2005-10-03T17:49:22.000000Z"
+   committed-date="2005-05-26T17:14:20.000000Z"
+   checksum="0ddb7c69e4b57bfced89d9ea9773de6a"
+   last-author="volker"
+   kind="file"
+   prop-time="2005-10-03T17:49:22.000000Z"/>
+<entry
+   committed-rev="1674"
+   name="polint.c"
+   text-time="2005-10-03T17:49:22.000000Z"
+   committed-date="2005-05-26T17:14:20.000000Z"
+   checksum="64fe75737a2c7dbe8657a1f26b7cee5a"
+   last-author="volker"
+   kind="file"
+   prop-time="2005-10-03T17:49:22.000000Z"/>
+<entry
+   committed-rev="1674"
+   name="nrutil.c"
+   text-time="2005-10-03T17:49:22.000000Z"
+   committed-date="2005-05-26T17:14:20.000000Z"
+   checksum="c6278987184630efa281c5f9cfa98d60"
+   last-author="volker"
+   kind="file"
+   prop-time="2005-10-03T17:49:22.000000Z"/>
+</wc-entries>
