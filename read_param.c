@@ -73,6 +73,10 @@ void read_parameterfile(char *fname)
   id[nt++] = FLOAT;
 
 // ********** FAVN/DSJ  ************
+  strcpy(tag[nt], "SavePotential");
+  addr[nt] = &SavePotential;
+  id[nt++] = INT;
+
   strcpy(tag[nt], "FixedAmplitude");
   addr[nt] = &FixedAmplitude;
   id[nt++] = INT;

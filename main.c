@@ -439,9 +439,10 @@ void displacement_fields(void)
 
                   for(k = 0; k < Nmesh / 2; k++)
                     {
-                      phase = gsl_rng_uniform(random_generator) * 2* PI;
+                      phase = gsl_rng_uniform(random_generator) * 2 * PI;
                       do
                         ampl = gsl_rng_uniform(random_generator);
+
                       while(ampl == 0);
 
                       if(i == Nmesh / 2 || j == Nmesh / 2 || k == Nmesh / 2)
@@ -482,7 +483,17 @@ void displacement_fields(void)
                             continue;
                         }
 
-                      phig = -log(ampl) * Anorm * exp( PrimordialIndex * log(kmag) );   /* initial normalized power */
+
+					 
+                      phig = Anorm * exp( PrimordialIndex * log(kmag) );   /* initial normalized power */
+// ************** FAVN/DSJ ***************
+					  if (!FixedAmplitude)
+					  	phig *= -log(ampl);
+// ***************** FAVN/DSJ *************
+//************ FAVN ***************
+			           if  (PhaseFlip)
+                         phase += phase_shift;
+//************ FAVN ***************
                       
                       phig = sqrt(phig) * fac * Beta / DstartFnl / kmag2;    /* amplitude of the initial gaussian potential */
                
@@ -561,6 +572,7 @@ void displacement_fields(void)
             }
         }
 
+ // ****************** DSJ ***************************
 
      /*** For non-local models it is important to keep all factors of SQRT(-1) as done below ***/
      /*** Notice also that there is a minus to convert from Bardeen to gravitational potential ***/
@@ -573,6 +585,26 @@ void displacement_fields(void)
       rfftwnd_mpi(Inverse_plan, 1, pot, Workspace, FFTW_NORMAL_ORDER);
       if(ThisTask == 0) printf("Done.\n");
       fflush(stdout);
+
+// *************************** DSJ ******************************
+    if (SavePotential == 1) {
+      FILE * ofile = fopen("Meshes/G/potential_G.dat", "wb");
+      unsigned int num_write = Nmesh * Nmesh * Nmesh;
+      double out[num_write];
+      for(i = 0; i < Local_nx; i++) {
+        for(j = 0; j < Nmesh; j++) {
+          for(k = 0; k < Nmesh; k++) {
+            coord = (i * Nmesh + j) * (2 * (Nmesh / 2 + 1)) + k; 
+            unsigned index = (i * Nmesh + j) * Nmesh + k; 
+            out[index] = pot[coord];
+          }
+        }
+      }
+      fwrite(&num_write, sizeof(int), 1, ofile);
+      fwrite(out, sizeof(double), num_write, ofile);
+      fclose(ofile);
+    }
+// *************************** DSJ ******************************
 
       /* square the potential in configuration space */
 
@@ -690,11 +722,11 @@ void displacement_fields(void)
 					  kmag_1_over_3 = pow(kmag2, exp_1_over_6);                      
 // ****************************** DSJ *************************
 
-                      cpartpot[coord].re = kmag * cpot[coord].re;
-                      cpartpot[coord].im = kmag * cpot[coord].im;
+                      cpartpot[coord].re = kmag_1_over_3 * cpot[coord].re;
+                      cpartpot[coord].im = kmag_1_over_3 * cpot[coord].im;
                       
-                      cp1p2p3nab[coord].re = kmag2 * cpot[coord].re;
-                      cp1p2p3nab[coord].im = kmag2 * cpot[coord].im; 
+                      cp1p2p3nab[coord].re = kmag_2_over_3 * cpot[coord].re;
+                      cp1p2p3nab[coord].im = kmag_2_over_3 * cpot[coord].im; 
             }
 
        MPI_Barrier(MPI_COMM_WORLD);
@@ -824,8 +856,8 @@ void displacement_fields(void)
 #ifdef EQUIL_FNL
       /* fnl equilateral */
 // ****************************************************************************************** DSJ ********************************************************************************************************
-              cpot[coord].re = cpot[coord].re + Fnl * (-3*cpartpot[coord].re - 2*cp1p2p3sym[coord].re / kmag_2_over_3 + 4*cp1p2p3sca[coord].re / kmag_1_over_3 + 2*cp1p2p3nab[coord].re / kmag_2_over_3);
-              cpot[coord].im = cpot[coord].im + Fnl * (-3*cpartpot[coord].im - 2*cp1p2p3sym[coord].im / kmag_2_over_3 + 4*cp1p2p3sca[coord].im / kmag_1_over_3 + 2*cp1p2p3nab[coord].im / kmag_2_over_3); 
+              cpot[coord].re = cpot[coord].re + Fnl * (-3.0 * cpartpot[coord].re - 2.0 * cp1p2p3sym[coord].re / kmag_2_over_3 + 4.0 * cp1p2p3sca[coord].re / kmag_1_over_3 + 2.0 * cp1p2p3nab[coord].re / kmag_2_over_3);
+              cpot[coord].im = cpot[coord].im + Fnl * (-3.0 * cpartpot[coord].im - 2.0 * cp1p2p3sym[coord].im / kmag_2_over_3 + 4.0 * cp1p2p3sca[coord].im / kmag_1_over_3 + 2.0 * cp1p2p3nab[coord].im / kmag_2_over_3); 
 // ****************************************************************************************** DSJ ********************************************************************************************************
               cpot[coord].re /= (double) nmesh3; 
               cpot[coord].im /= (double) nmesh3; 
@@ -833,8 +865,8 @@ void displacement_fields(void)
 
 #ifdef ORTOG_FNL 
 // ****************************************************************************************** DSJ ********************************************************************************************************
-              cpot[coord].re = cpot[coord].re + Fnl * (-9*cpartpot[coord].re - 8*cp1p2p3sym[coord].re / kmag_2_over_3 + 10*cp1p2p3sca[coord].re / kmag_1_over_3 + 8*cp1p2p3nab[coord].re / kmag_2_over_3);
-              cpot[coord].im = cpot[coord].im + Fnl * (-9*cpartpot[coord].im - 8*cp1p2p3sym[coord].im / kmag_2_over_3 + 10*cp1p2p3sca[coord].im / kmag_1_over_3 + 8*cp1p2p3nab[coord].im / kmag_2_over_3);
+              cpot[coord].re = cpot[coord].re + Fnl * (-9.0 * cpartpot[coord].re - 8.0 * cp1p2p3sym[coord].re / kmag_2_over_3 + 10.0 * cp1p2p3sca[coord].re / kmag_1_over_3 + 8.0 * cp1p2p3nab[coord].re / kmag_2_over_3);
+              cpot[coord].im = cpot[coord].im + Fnl * (-9.0 * cpartpot[coord].im - 8.0 * cp1p2p3sym[coord].im / kmag_2_over_3 + 10.0 * cp1p2p3sca[coord].im / kmag_1_over_3 + 8.0 * cp1p2p3nab[coord].im / kmag_2_over_3);
 // ****************************************************************************************** DSJ ********************************************************************************************************
               cpot[coord].re /= (double) nmesh3; 
               cpot[coord].im /= (double) nmesh3; 
@@ -856,9 +888,44 @@ void displacement_fields(void)
       free(cp1p2p3nab);
       free(cp1p2p3tre);
   
-
 #endif
 
+
+    // ******************* DSJ ***********************
+    if (SavePotential == 1 ) {
+      if(ThisTask == 0)
+        printf("Fourier transforming NG potential to configuration...");
+      rfftwnd_mpi(Inverse_plan, 1, pot, Workspace, FFTW_NORMAL_ORDER);
+      if (ThisTask == 0) {
+        printf("Done.\n");
+        fflush(stdout);
+      }
+#ifdef LOCAL_FNL  
+      FILE * ofile = fopen("Meshes/LC/potential_NG_LC.dat", "wb");
+#endif
+#ifdef EQUIL_FNL
+      FILE * ofile = fopen("Meshes/EQ/potential_NG_EQ.dat", "wb");
+#endif
+#ifdef ORTOG_FNL 
+      FILE * ofile = fopen("Meshes/OR/potential_NG_OR.dat", "wb");
+#endif
+      unsigned int num_write = Nmesh * Nmesh * Nmesh;
+      double out[num_write];
+      for(i = 0; i < Local_nx; i++) {
+        for(j = 0; j < Nmesh; j++) {
+          for(k = 0; k < Nmesh; k++) {
+            coord = (i * Nmesh + j) * (2 * (Nmesh / 2 + 1)) + k; 
+               unsigned index = (i * Nmesh + j) * Nmesh + k; 
+            out[index] = pot[coord];
+          }
+        }
+      }
+      fwrite(&num_write, sizeof(int), 1, ofile);
+      fwrite(out, sizeof(double), num_write, ofile);
+      fclose(ofile);
+      exit(0);
+    }
+    // ******************* DSJ ***********************
 
     MPI_Barrier(MPI_COMM_WORLD);
     if(ThisTask==0) printf("finished nongaussian potential \n");

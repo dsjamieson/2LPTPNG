@@ -45,6 +45,7 @@ double RedshiftFnl;
 double MassTable[6];
 double Fnl; 
 // *** FAVN/DSJ ***
+int SavePotential;
 int FixedAmplitude;
 int PhaseFlip;
 // *** FAVN/DSJ ***

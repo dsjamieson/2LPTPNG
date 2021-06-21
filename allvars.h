@@ -100,6 +100,7 @@ extern double RedshiftFnl;
 extern double MassTable[6];
 extern double Fnl;
 // ******* FAVN/DSJ ******
+extern int SavePotential;
 extern int FixedAmplitude;
 extern int PhaseFlip;
 // ******* FAVN/DSJ ******
