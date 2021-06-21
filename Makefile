@@ -25,13 +25,20 @@ OPT   +=  -DNO64BITID     # switch this on if you want normal 32-bit IDs
 
 #OPT += -DONLY_ZA    # swith this on if you want ZA initial conditions (2LPT otherwise)
 
-#OPT += -DONLY_GAUSSIAN # shwich this if you want gaussian initial conditions (fnl otherwise) 
-
-#OPT += -DLOCAL_FNL #switch this if you want only local non-gaussianities
-
-#OPT += -DEQUIL_FNL #switch this if you want equilateral Fnl
-
-OPT += -DORTOG_FNL #switch this if you want ortogonal Fnl
+#MODE = -DONLY_GAUSSIAN # switch this if you want gaussian initial conditions (fnl otherwise) 
+#MODE = -DLOCAL_FNL #switch this if you want only local non-gaussianities
+#MODE = -DEQUIL_FNL #switch this if you want equilateral Fnl
+MODE = -DORTOG_FNL #switch this if you want ortogonal Fnl
+ifeq  ($(MODE), -DONLY_GAUSSIAN))
+	EXEC = 2LPT
+else ifeq ($(MODE), -DLOCAL_FNL)
+	EXEC = 2LPTNGLC
+else ifeq ($(MODE), -DEQUIL_FNL)
+	EXEC = 2LPTNGEQ
+else ifeq ($(MODE), -DORTOG_FNL)
+	EXEC = 2LPTNGOR
+endif
+OPT += $(MODE)
 
 OPTIONS =  $(OPT)
 
