@@ -134,7 +134,7 @@ void read_transfer_table(void)
       printf("\n WARNING: klower is %f, may be too large to normalize transfer  \n",klower);
       FatalError(1111);  
      }
-  if(TransferTable[NTransferTable].logk <= log10(500./8.) ) 
+  if(TransferTable[NTransferTable - 1].logk <= log10(500./8.) ) 
      {
       printf("\n WARNING: kmax is may be too small to normalize transfer  \n");
       printf("\n Values outside the input range will be taken to be zero  \n");

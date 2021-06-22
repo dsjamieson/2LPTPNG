@@ -588,7 +588,7 @@ void displacement_fields(void)
 
 // *************************** DSJ ******************************
     if (SavePotential == 1) {
-      FILE * ofile = fopen("Meshes/G/potential_G.dat", "wb");
+      FILE * ofile = fopen("Meshes/potential_G.dat", "wb");
       unsigned int num_write = Nmesh * Nmesh * Nmesh;
       double out[num_write];
       for(i = 0; i < Local_nx; i++) {
@@ -717,16 +717,16 @@ void displacement_fields(void)
                         kvec[2] = -(Nmesh - k) * 2 * PI / Box;
 
                       kmag2 = kvec[0] * kvec[0] + kvec[1] * kvec[1] + kvec[2] * kvec[2];
-// ****************************** DSJ *************************
+// ************************************ DSJ ********************************
 					  kmag_2_over_3 = pow(kmag2, exp_1_over_3);                      
 					  kmag_1_over_3 = pow(kmag2, exp_1_over_6);                      
-// ****************************** DSJ *************************
 
                       cpartpot[coord].re = kmag_1_over_3 * cpot[coord].re;
                       cpartpot[coord].im = kmag_1_over_3 * cpot[coord].im;
                       
                       cp1p2p3nab[coord].re = kmag_2_over_3 * cpot[coord].re;
                       cp1p2p3nab[coord].im = kmag_2_over_3 * cpot[coord].im; 
+// ************************************ DSJ ********************************
             }
 
        MPI_Barrier(MPI_COMM_WORLD);
@@ -901,13 +901,13 @@ void displacement_fields(void)
         fflush(stdout);
       }
 #ifdef LOCAL_FNL  
-      FILE * ofile = fopen("Meshes/LC/potential_NG_LC.dat", "wb");
+      FILE * ofile = fopen("Meshes/potential_NG_LC.dat", "wb");
 #endif
 #ifdef EQUIL_FNL
-      FILE * ofile = fopen("Meshes/EQ/potential_NG_EQ.dat", "wb");
+      FILE * ofile = fopen("Meshes/potential_NG_EQ.dat", "wb");
 #endif
 #ifdef ORTOG_FNL 
-      FILE * ofile = fopen("Meshes/OR/potential_NG_OR.dat", "wb");
+      FILE * ofile = fopen("Meshes/potential_NG_OR.dat", "wb");
 #endif
       unsigned int num_write = Nmesh * Nmesh * Nmesh;
       double out[num_write];

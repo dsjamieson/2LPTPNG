@@ -1,0 +1,55 @@
+
+Nmesh         256
+Nsample       256
+Box           1000.0
+FileBase      test_potential
+OutputDir     Meshes
+Omega            0.30
+OmegaLambda      0.70
+OmegaBaryon      0.05
+OmegaDM_2ndSpecies 0
+HubbleParam      0.70
+Redshift         64.
+RedshiftFnl      64.
+Sigma8           0.80
+Fnl              100.0
+
+SavePotential    1         % writes potential to file before and after applying NG, then exits
+FixedAmplitude   1         % Amplitudes of modes are fixed
+PhaseFlip        0         % Phases of modes are reversed
+
+SphereMode       0         % if "1" only modes with |k| < k_Nyquist are
+                           % used (i.e. a sphere in k-space), otherwise modes with
+                           % |k_x|,|k_y|,|k_z| < k_Nyquist are used
+                           % (i.e. a cube in k-space)
+                           % do NOT use it for non-gaussian models
+          
+                           % "0" not use power spectrum only transfer file
+WhichSpectrum    0         % "1" selects Eisenstein & Hu spectrum,
+		                   % "2" selects a tabulated power spectrum in
+                           % the file 'FileWithInputSpectrum'
+                           % otherwise, Efstathiou parametrization is used
+FileWithInputSpectrum  0
+                                            % spectrum (if used)
+FileWithInputTransfer input_transfer_function_z0.00e+00.txt       
+InputSpectrum_UnitLength_in_cm  3.085678e24 % defines length unit of tabulated
+                                            % input spectrum in cm/h. 
+                                            % Note: This can be chosen different from UnitLength_in_cm
+ShapeGamma       0.21
+PrimordialIndex  0.965    
+WhichTransfer    2        % "3" selects Transfer function deduced from Power Spectrum 
+                          % "2" selects Transfer function from Transfer file
+                          % "1" selects EH Transfer function 
+                          % other options not properly implemented yet 
+FileWithInputTransfer
+Seed    8923487
+NumFilesWrittenInParallel 4
+UnitLength_in_cm          3.085678e24   % defines length unit of output (in cm/h) 
+UnitMass_in_g             1.989e43      % defines mass unit of output (in g/cm)
+UnitVelocity_in_cm_per_s  1e5           % defines velocity unit of output (in cm/sec)
+WDM_On               0
+WDM_Vtherm_On        0
+WDM_PartMass_in_kev  0.0   % This is the particle mass in keV of the WDM particl
+
+GlassFile ../inputs/glass1_le
+GlassTileFac 180
