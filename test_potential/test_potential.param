@@ -1,6 +1,6 @@
 
-Nmesh         256
-Nsample       256
+Nmesh         128
+Nsample       128
 Box           1000.0
 FileBase      test_potential
 OutputDir     Meshes
@@ -42,7 +42,7 @@ WhichTransfer    2        % "3" selects Transfer function deduced from Power Spe
                           % "1" selects EH Transfer function 
                           % other options not properly implemented yet 
 FileWithInputTransfer
-Seed    8923487
+Seed    3146478615
 NumFilesWrittenInParallel 4
 UnitLength_in_cm          3.085678e24   % defines length unit of output (in cm/h) 
 UnitMass_in_g             1.989e43      % defines mass unit of output (in g/cm)
