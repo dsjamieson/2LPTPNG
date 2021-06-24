@@ -8,7 +8,6 @@
 #include "allvars.h"
 #include "proto.h"
 
-
 #define ASSERT_ALLOC(cond) {                                                                                  \
    if(cond)                                                                                                   \
     {                                                                                                         \
@@ -22,8 +21,6 @@
       FatalError(1);                                                                                          \
     }                                                                                                         \
 }
-
-
 
 int main(int argc, char **argv)
 {
@@ -440,6 +437,9 @@ void displacement_fields(void)
                   for(k = 0; k < Nmesh / 2; k++)
                     {
                       phase = gsl_rng_uniform(random_generator) * 2 * PI;
+// ***************** FAVN *****************
+                      phase += phase_shift;
+// ***************** FAVN *****************
                       do
                         ampl = gsl_rng_uniform(random_generator);
 
@@ -483,17 +483,11 @@ void displacement_fields(void)
                             continue;
                         }
 
-
-					 
                       phig = Anorm * exp( PrimordialIndex * log(kmag) );   /* initial normalized power */
 // ************** FAVN/DSJ ***************
 					  if (!FixedAmplitude)
 					  	phig *= -log(ampl);
 // ***************** FAVN/DSJ *************
-//************ FAVN ***************
-			           if  (PhaseFlip)
-                         phase += phase_shift;
-//************ FAVN ***************
                       
                       phig = sqrt(phig) * fac * Beta / DstartFnl / kmag2;    /* amplitude of the initial gaussian potential */
                
@@ -572,8 +566,6 @@ void displacement_fields(void)
             }
         }
 
- // ****************** DSJ ***************************
-
      /*** For non-local models it is important to keep all factors of SQRT(-1) as done below ***/
      /*** Notice also that there is a minus to convert from Bardeen to gravitational potential ***/
 
@@ -633,13 +625,45 @@ void displacement_fields(void)
           for(k = 0; k <= Nmesh / 2 ; k++)
             {
               coord = (i * Nmesh + j) * (Nmesh / 2 + 1) + k;
+
+// ****************************** DSJ *************************
+		      if(SphereMode == 1)
+			{
+              ii = i + Local_x_start;
+
+			  if(ii < Nmesh / 2)
+				kvec[0] = ii * 2 * PI / Box;
+			  else
+				kvec[0] = -(Nmesh - ii) * 2 * PI / Box;
+
+			  if(j < Nmesh / 2)
+				kvec[1] = j * 2 * PI / Box;
+			  else
+				kvec[1] = -(Nmesh - j) * 2 * PI / Box;
+
+			  if(k < Nmesh / 2)
+				kvec[2] = k * 2 * PI / Box;
+			  else
+				kvec[2] = -(Nmesh - k) * 2 * PI / Box;
+
+			  kmag = sqrt(kvec[0] * kvec[0] + kvec[1] * kvec[1] + kvec[2] * kvec[2]);
+
+			  if(kmag * Box / (2 * PI) > Nsample / 2) {	/* select a sphere in k-space */
+				cpot[coord].re = 0.;
+				cpot[coord].im = 0.;
+				continue;
+			  }
+			}
+// ****************************** DSJ *************************
+
               cpot[coord].re /= (double) nmesh3; 
               cpot[coord].im /= (double) nmesh3; 
+
             }
         
        if(ThisTask == 0) {
-              cpot[0].re=0.;
-              cpot[0].im=0.; 
+              cpot[0].re = 0.;
+              cpot[0].im = 0.; 
            }
 
 
@@ -852,35 +876,37 @@ void displacement_fields(void)
                           cpot[0].im=0.;
                           continue;
                         }
-                      
+
+// ****************************** DSJ *************************
+		    if(SphereMode == 1) {
+			  kmag = sqrt(kmag2);
+			  if(kmag * Box / (2 * PI) > Nsample / 2) {	/* select a sphere in k-space */
+				cpot[coord].re = 0.;
+				cpot[coord].im = 0.;
+				continue;
+			  }
+			}
+// ****************************** DSJ *************************
+                     
 #ifdef EQUIL_FNL
       /* fnl equilateral */
 // ****************************************************************************************** DSJ ********************************************************************************************************
-              cpot[coord].re = cpot[coord].re + Fnl * (-3.0 * cpartpot[coord].re - 2.0 * cp1p2p3sym[coord].re / kmag_2_over_3 + 4.0 * cp1p2p3sca[coord].re / kmag_1_over_3 + 2.0 * cp1p2p3nab[coord].re / kmag_2_over_3);
-              cpot[coord].im = cpot[coord].im + Fnl * (-3.0 * cpartpot[coord].im - 2.0 * cp1p2p3sym[coord].im / kmag_2_over_3 + 4.0 * cp1p2p3sca[coord].im / kmag_1_over_3 + 2.0 * cp1p2p3nab[coord].im / kmag_2_over_3); 
+              cpot[coord].re += Fnl * (-3.0 * cpartpot[coord].re - 2.0 * cp1p2p3sym[coord].re / kmag_2_over_3 + 4.0 * cp1p2p3sca[coord].re / kmag_1_over_3 + 2.0 * cp1p2p3nab[coord].re / kmag_2_over_3);
+              cpot[coord].im += Fnl * (-3.0 * cpartpot[coord].im - 2.0 * cp1p2p3sym[coord].im / kmag_2_over_3 + 4.0 * cp1p2p3sca[coord].im / kmag_1_over_3 + 2.0 * cp1p2p3nab[coord].im / kmag_2_over_3); 
 // ****************************************************************************************** DSJ ********************************************************************************************************
-              cpot[coord].re /= (double) nmesh3; 
-              cpot[coord].im /= (double) nmesh3; 
 #endif
 
 #ifdef ORTOG_FNL 
 // ****************************************************************************************** DSJ ********************************************************************************************************
-              cpot[coord].re = cpot[coord].re + Fnl * (-9.0 * cpartpot[coord].re - 8.0 * cp1p2p3sym[coord].re / kmag_2_over_3 + 10.0 * cp1p2p3sca[coord].re / kmag_1_over_3 + 8.0 * cp1p2p3nab[coord].re / kmag_2_over_3);
-              cpot[coord].im = cpot[coord].im + Fnl * (-9.0 * cpartpot[coord].im - 8.0 * cp1p2p3sym[coord].im / kmag_2_over_3 + 10.0 * cp1p2p3sca[coord].im / kmag_1_over_3 + 8.0 * cp1p2p3nab[coord].im / kmag_2_over_3);
+              cpot[coord].re += Fnl * (-9.0 * cpartpot[coord].re - 8.0 * cp1p2p3sym[coord].re / kmag_2_over_3 + 10.0 * cp1p2p3sca[coord].re / kmag_1_over_3 + 8.0 * cp1p2p3nab[coord].re / kmag_2_over_3);
+              cpot[coord].im += Fnl * (-9.0 * cpartpot[coord].im - 8.0 * cp1p2p3sym[coord].im / kmag_2_over_3 + 10.0 * cp1p2p3sca[coord].im / kmag_1_over_3 + 8.0 * cp1p2p3nab[coord].im / kmag_2_over_3);
 // ****************************************************************************************** DSJ ********************************************************************************************************
+#endif
+
               cpot[coord].re /= (double) nmesh3; 
               cpot[coord].im /= (double) nmesh3; 
-#endif
-     
-                      if(i == 0 && j == 0 && k == 0)
-                        {
-                          cpot[0].re=0.;
-                          cpot[0].im=0.;
-                          continue;
-                        }
 
             }
-
 
       free(cpartpot);
       free(cp1p2p3sym);
@@ -889,7 +915,6 @@ void displacement_fields(void)
       free(cp1p2p3tre);
   
 #endif
-
 
     // ******************* DSJ ***********************
     if (SavePotential == 1 ) {

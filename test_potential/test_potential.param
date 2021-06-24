@@ -1,6 +1,6 @@
 
-Nmesh         128
-Nsample       128
+Nmesh         256
+Nsample       256
 Box           1000.0
 FileBase      test_potential
 OutputDir     Meshes
@@ -16,9 +16,9 @@ Fnl              100.0
 
 SavePotential    1         % writes potential to file before and after applying NG, then exits
 FixedAmplitude   1         % Amplitudes of modes are fixed
-PhaseFlip        0         % Phases of modes are reversed
+PhaseFlip    1
 
-SphereMode       0         % if "1" only modes with |k| < k_Nyquist are
+SphereMode       1         % if "1" only modes with |k| < k_Nyquist are
                            % used (i.e. a sphere in k-space), otherwise modes with
                            % |k_x|,|k_y|,|k_z| < k_Nyquist are used
                            % (i.e. a cube in k-space)
