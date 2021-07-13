@@ -95,7 +95,6 @@ extern struct part_data
 
 extern double InitTime;
 extern double Redshift;
-extern double RedshiftFnl;
 extern double MassTable[6];
 extern double Fnl;
 // ******* FAVN/DSJ ******

@@ -28,7 +28,6 @@ OmegaDM_2ndSpecies  0      % Omega for a second dark matter species (at z=0)
 HubbleParam      0.7       % Hubble paramater (may be used for power spec parameterization)
 
 Redshift         49.        % Starting redshift
-RedshiftFnl      49.        % Redshift when nongaussian fnl potential is computed
 
 Sigma8           0.8       % power spectrum normalization
 

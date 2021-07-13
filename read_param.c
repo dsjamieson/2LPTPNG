@@ -64,10 +64,6 @@ void read_parameterfile(char *fname)
   addr[nt] = &Redshift;
   id[nt++] = FLOAT;
 
-  strcpy(tag[nt], "RedshiftFnl");
-  addr[nt] = &RedshiftFnl;
-  id[nt++] = FLOAT;
-
   strcpy(tag[nt], "Fnl");
   addr[nt] = &Fnl;
   id[nt++] = FLOAT;

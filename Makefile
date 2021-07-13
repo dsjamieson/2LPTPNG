@@ -25,10 +25,10 @@ OPT   +=  -DNO64BITID     # switch this on if you want normal 32-bit IDs
 
 #OPT += -DONLY_ZA    # swith this on if you want ZA initial conditions (2LPT otherwise)
 
-#MODE = -DONLY_GAUSSIAN
+MODE = -DONLY_GAUSSIAN
 #MODE = -DLOCAL_FNL
 #MODE = -DEQUIL_FNL
-MODE = -DORTOG_FNL
+#MODE = -DORTOG_FNL
 
 ifeq ($(MODE),-DONLY_GAUSSIAN)
 	EXEC:=2LPT

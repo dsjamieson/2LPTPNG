@@ -40,7 +40,6 @@ int Nglass;
 
 double InitTime;
 double Redshift;
-double RedshiftFnl;
 double MassTable[6];
 double Fnl; 
 // *** FAVN/DSJ ***
