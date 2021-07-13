@@ -1,6 +1,8 @@
 
 #include <gsl/gsl_rng.h>
 
+void print_setup(void);
+
 double GrowthFactor(double astart, double aend);
 void   print_spec(void);
 int    FatalError(int errnum);

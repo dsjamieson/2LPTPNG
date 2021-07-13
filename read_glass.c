@@ -24,8 +24,6 @@ void read_glass(char *fname)
 
   if(ThisTask == 0)
     {
-      printf("\nreading Lagrangian glass file...\n");
-      fflush(stdout);
 
       numfiles = find_files(fname);
 
@@ -57,8 +55,6 @@ void read_glass(char *fname)
 	  for(k = 0; k < 6; k++)
 	    nlocal += header1.npart[k];
 
-	  printf("reading '%s' with %d particles\n", fname, nlocal);
-
 	  if(num == 0)
 	    {
 	      Nglass = 0;
@@ -66,7 +62,6 @@ void read_glass(char *fname)
 	      for(k = 0; k < 6; k++)
 		Nglass += header1.npartTotal[k];
 
-	      printf("\nNglass= %d\n\n", Nglass);
 	      pos = (float *) malloc(sizeof(float) * Nglass * 3);
 
 	      if(!(pos))
@@ -161,19 +156,6 @@ void read_glass(char *fname)
       if(npart_Task[i] > 0)
 	NTaskWithN++;
     }
-
-
-  if(ThisTask == 0)
-    {
-      for(i = 0; i < NTask; i++)
-	printf("%d particles on task=%d  (slabs=%d)\n", npart_Task[i], i, Local_nx_table[i]);
-
-      printf("\nTotal number of particles  = %d%09d\n\n",
-	     (int) (TotNumPart / 1000000000), (int) (TotNumPart % 1000000000));
-
-      fflush(stdout);
-    }
-
 
   free(npart_Task);
 

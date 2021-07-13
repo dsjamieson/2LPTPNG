@@ -91,12 +91,6 @@ void read_transfer_table(void)
 
   fclose(fd);
 
-  if(ThisTask == 0)
-    {
-      printf("found %d pairs of values in input transfer function table\n", NTransferTable);
-      fflush(stdout);
-    }
-
   TransferTable = malloc(NTransferTable * sizeof(struct trans_table));
 
   sprintf(buf, FileWithInputTransfer);
@@ -126,8 +120,6 @@ void read_transfer_table(void)
   qsort(TransferTable, NTransferTable, sizeof(struct trans_table), compare_transfer_logk); 
 
   klower = pow(10.0, TransferTable[0].logk);
-
-  if(ThisTask == 0) printf("\n klower transfer is %f  \n",klower);
 
   if(TransferTable[0].logk >= -4.6 ) 
      {
@@ -176,10 +168,8 @@ void initialize_transferfunction(void)
 
 double TransferFunc_Tabulated(double k)
 {
-  double logk, logT, T, kold, u, dlogk; 
+  double logk, logT, T, u, dlogk; 
   int binlow, binhigh, binmid;
-
-  kold = k;
 
   k *= (InputSpectrum_UnitLength_in_cm / UnitLength_in_cm);     /* convert to h/Mpc */
 
@@ -329,14 +319,6 @@ void read_power_table(void)
 
   fclose(fd);
 
-
-  if(ThisTask == 0)
-    {
-      printf("found %d pairs of values in input spectrum table\n", NPowerTable);
-      fflush(stdout);
-    }
-
-
   PowerTable = malloc(NPowerTable * sizeof(struct pow_table));
 
   sprintf(buf, FileWithInputSpectrum);
@@ -366,8 +348,6 @@ void read_power_table(void)
   qsort(PowerTable, NPowerTable, sizeof(struct pow_table), compare_logk);
 
   klower = pow(10.0, PowerTable[0].logk) * 1.0000001;
-
-  if(ThisTask == 0) printf("\n klower power is %f  \n",klower);
 
   if(PowerTable[0].logk >= -4.6 ) 
      {

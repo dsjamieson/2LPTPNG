@@ -1,5 +1,7 @@
 #include "allvars.h"
 
+clock_t start_time;
+clock_t previous_time;
 
 struct io_header_1 header1, header;
 
@@ -14,8 +16,6 @@ FILE *FdTmp, *FdTmpInput;
 int Nmesh, Nsample;
 
 long long IDStart;
-
-
 
 char GlassFile[500];
 char FileWithInputSpectrum[500];
@@ -43,7 +43,6 @@ double Redshift;
 double MassTable[6];
 double Fnl; 
 // *** FAVN/DSJ ***
-int SavePotential;
 int FixedAmplitude;
 int PhaseFlip;
 // *** FAVN/DSJ ***
