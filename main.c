@@ -415,8 +415,8 @@ void displacement_fields(void)
               }
 
       /* Ho in units of UnitLength_in_cm and c=1, i.e., internal units so far  */
-      /* Beta = 3/2 H(z)^2 a^2 Om(a) = 3/2 Ho^2 Om0 / a */ 
-      Beta = 1.5 * Omega / FnlTime / (2998. * 2998. / UnitLength_in_cm / UnitLength_in_cm * 3.085678e24 * 3.085678e24 )  ;        
+      /* Beta = 3/2 H(z)^2 a^3 Om(a) = 3/2 Ho^2 Om0 */ 
+      Beta = 1.5 * Omega / (2998. * 2998. / UnitLength_in_cm / UnitLength_in_cm * 3.085678e24 * 3.085678e24 )  ;        
 
 // ******************* DSJ ***********************
 	  exp_1_over_3 = (4. - PrimordialIndex) / 3.; // n_s modified exponent for generalized laplacian/inverse laplacian, exponent for k^2
@@ -490,7 +490,7 @@ void displacement_fields(void)
 					  	phig *= -log(ampl);
 // ***************** FAVN/DSJ *************
                       
-                      phig = sqrt(phig) * fac * Beta / DstartFnl / kmag2;    /* amplitude of the initial gaussian potential */
+                      phig = sqrt(phig) * fac * Beta / kmag2;    /* amplitude of the initial gaussian potential */
                
                       if(k > 0)
                         {
@@ -1020,7 +1020,7 @@ void displacement_fields(void)
 
                      t_of_k = TransferFunc(kmag);
 
-                     twb = t_of_k * ( DstartFnl / Dplus ) / Beta;   
+                     twb = t_of_k / Dplus  / Beta;   
 
                      for(axes = 0; axes < 3; axes++)   
                                         {

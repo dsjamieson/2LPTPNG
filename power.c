@@ -168,11 +168,6 @@ void initialize_transferfunction(void)
   /* Transfer function is meant to be normalizet to 1 at k=0 
    * No multiple Tf implemented as in power spectrum multiple species 
    */ 
-
-   FnlTime = 1 / (1 + RedshiftFnl);  /* scale factor where to compute nonlinear potential*/
-
-   DstartFnl = GrowthFactor(FnlTime, 1.0);
-
    if(WhichTransfer == 2)
     read_transfer_table();
  

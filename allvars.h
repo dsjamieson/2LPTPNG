@@ -94,7 +94,6 @@ extern struct part_data
 
 
 extern double InitTime;
-extern double FnlTime;
 extern double Redshift;
 extern double RedshiftFnl;
 extern double MassTable[6];
@@ -135,7 +134,6 @@ extern double ShapeGamma;
 extern double Anorm;
 
 extern double Dplus; /* growth factor where output set by InitTime */
-extern double DstartFnl; /* growth factor for initial potential */ 
 
 #ifdef DIFFERENT_TRANSFER_FUNC
 extern int Type, MinType, MaxType;

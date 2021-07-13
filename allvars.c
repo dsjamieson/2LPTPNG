@@ -39,7 +39,6 @@ struct part_data *P;
 int Nglass;
 
 double InitTime;
-double FnlTime;
 double Redshift;
 double RedshiftFnl;
 double MassTable[6];
@@ -76,7 +75,7 @@ double OmegaBaryon, HubbleParam;
 double ShapeGamma;
 double PrimordialIndex;
 double Anorm;
-double Dplus, DstartFnl;			/* growth factor at output=InitTime and growth factor for initial potential */
+double Dplus;			/* growth factor at output=InitTime and growth factor for initial potential */
 
 #ifdef DIFFERENT_TRANSFER_FUNC
 int Type, MinType, MaxType;
