@@ -408,8 +408,8 @@ void initialize_powerspectrum(void)
   if(ThisTask == 0 && WhichSpectrum == 2)
     printf("Normalization adjusted to  Sigma8=%g   (Normfac=%g)\n\n", Sigma8, Norm);
 
+  D0 = GrowthFactor(1.e-8, 1.0) * 1.e-8; /* Linnear growth factor at redshift z=0.0 normalized to D = a during matter domination */
   Dplus = GrowthFactor(InitTime, 1.0);
-
 
  switch (WhichSpectrum)
     {

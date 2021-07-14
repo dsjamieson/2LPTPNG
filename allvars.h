@@ -136,6 +136,7 @@ extern double ShapeGamma;
 extern double Anorm;
 
 extern double Dplus; /* growth factor where output set by InitTime */
+extern double D0;    /* matter/DE domination growth factor normalized to the scale factor at early times */  
 
 #ifdef DIFFERENT_TRANSFER_FUNC
 extern int Type, MinType, MaxType;

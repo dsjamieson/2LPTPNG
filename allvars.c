@@ -74,6 +74,7 @@ double ShapeGamma;
 double PrimordialIndex;
 double Anorm;
 double Dplus;			/* growth factor at output=InitTime and growth factor for initial potential */
+double D0;    /* matter/DE domination growth factor normalized to the scale factor at early times */  
 
 #ifdef DIFFERENT_TRANSFER_FUNC
 int Type, MinType, MaxType;

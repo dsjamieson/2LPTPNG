@@ -428,8 +428,8 @@ void displacement_fields(void) {
               }
 
       /* Ho in units of UnitLength_in_cm and c=1, i.e., internal units so far  */
-      /* Beta = 3/2 H(z)^2 a^3 Om(a) = 3/2 Ho^2 Om0 */ 
-      Beta = 1.5 * Omega / (2998. * 2998. / UnitLength_in_cm / UnitLength_in_cm * 3.085678e24 * 3.085678e24 )  ;        
+      /* Beta = 3/2 H(z)^2 a^3 Om(a) / D0 = 3/2 Ho^2 Om0 / D0 at redshift z = 0.0 */ 
+      Beta = 1.5 * Omega / (2998. * 2998. / UnitLength_in_cm / UnitLength_in_cm * 3.085678e24 * 3.085678e24 ) / D0 ;        
 
       for(i = 0; i < Nmesh; i++)
         {
