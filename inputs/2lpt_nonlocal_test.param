@@ -13,8 +13,8 @@ Nsample       280          % sets the maximum k that the code uses,
 Box             1200.0     % Periodic box size of simulation
 
 FileBase       ics_nonlocal_test                                 % Base-filename of output files
-OutputDir      /export/chichipio2/mm3812/NBody/output            % Directory for output
-GlassFile      /export/chichipio2/mm3812/NBody/inputs/glass1_le 
+OutputDir      /mnt/home/wcoulton/PNG/2LPTPNG-LSS-ORTH/output            % Directory for output
+GlassFile      /mnt/home/wcoulton/PNG/2LPTPNG-LSS-ORTH/inputs/glass1_le 
 GlassTileFac   180 
 
 Omega            0.25      % Total matter density  (at z=0)
@@ -45,8 +45,8 @@ WhichTransfer    2         % "3" selects Transfer function deduced from Power Sp
                            % "1" selects EH Transfer function 
                            % other options not properly implemented yet 
            
-FileWithInputSpectrum    /export/chichipio2/mm3812/NBody/inputs/input_spectrum.dat 
-FileWithInputTransfer    /export/chichipio2/mm3812/NBody/inputs/input_transfer.dat  
+FileWithInputSpectrum    /mnt/home/wcoulton/PNG/2LPTPNG-LSS-ORTH/inputs/input_spectrum.dat 
+FileWithInputTransfer    /mnt/home/wcoulton/PNG/2LPTPNG-LSS-ORTH/inputs/input_transfer.dat  
 ShapeGamma               0.21     % only needed for Efstathiou power spectrum 
                                                                                                                                           
 NumFilesWrittenInParallel 4  % limits the number of files that are written in parallel when outputting
@@ -65,3 +65,8 @@ WDM_Vtherm_On        0      % If set to '1', the (warm) dark matter particles wi
                             % corresponding to their particle mass
 
 WDM_PartMass_in_kev  10.0   % This is the particle mass in keV of the WDM particle
+
+
+
+FixedAmplitude        0   % For fixed sims
+PhaseFlip             0   % For pair fixed sims

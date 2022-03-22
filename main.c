@@ -100,6 +100,11 @@ void print_setup(void) {
 #ifdef ORTOG_FNL 
   char exec[] = "2LPTNGOR";
 #endif
+//wrc
+#ifdef ORTOG_LSS_FNL 
+  char exec[] = "2LPTNGORLSS";
+#endif
+
 
   pstr[0] = '*';
   for (int i = 1; i < 79/2 - 3; i++)
@@ -155,6 +160,24 @@ void displacement_fields(void) {
   fftw_real *(p1p2p3nab);
   fftw_complex *(cp1p2p3tre);
   fftw_real *(p1p2p3tre);
+// ****  wrc ****
+#ifdef ORTOG_LSS_FNL
+  // Will contain phi_G/k (hence invs)
+  fftw_complex *(cp1p2p3inv);
+  fftw_real *(p1p2p3inv);
+  // names correspond to kernels in Appendix A of Coulton et al.
+  fftw_complex *(cp1p2p3_K12D);
+  fftw_real *(p1p2p3_K12D);
+  fftw_complex *(cp1p2p3_K12E);
+  fftw_real *(p1p2p3_K12E);
+  fftw_complex *(cp1p2p3_K12F);
+  fftw_real *(p1p2p3_K12F);
+  fftw_complex *(cp1p2p3_K12G);
+  fftw_real *(p1p2p3_K12G);
+  double orth_p = 27/(-21+743/(7*(20*pow(PI,2)-193)));
+  double orth_t = (2+20/9*orth_p)/(6+10/3*orth_p);
+#endif
+// ****  wrc ****
 #endif
 #endif
 
@@ -664,6 +687,12 @@ void displacement_fields(void) {
       if (ThisTask == 0) {printf("Computing orthogonal non-Gaussian potential... "); fflush(stdout);};
 #endif
 
+// ****  wrc ****
+#ifdef ORTOG_LSS_FNL
+      if (ThisTask == 0) {printf("Computing orthogonal-LSS non-Gaussian potential... "); fflush(stdout);};
+#endif
+
+// ****  wrc ****
       /**** NON-LOCAL PRIMORDIAL POTENTIAL **************/ 
 
           /* allocate partpotential */
@@ -688,6 +717,26 @@ void displacement_fields(void) {
 	  p1p2p3tre = (fftw_real *) cp1p2p3tre;
 	  ASSERT_ALLOC(cp1p2p3tre);
 
+
+// ****  wrc ****
+#ifdef ORTOG_LSS_FNL
+    cp1p2p3inv = (fftw_complex *) malloc(bytes = sizeof(fftw_real) * TotalSizePlusAdditional);
+    p1p2p3inv  = (fftw_real *) cp1p2p3inv ;
+    ASSERT_ALLOC(cp1p2p3inv);
+    cp1p2p3_K12D = (fftw_complex *) malloc(bytes = sizeof(fftw_real) * TotalSizePlusAdditional);
+    p1p2p3_K12D  = (fftw_real *) cp1p2p3_K12D ;
+    ASSERT_ALLOC(cp1p2p3_K12D);
+    cp1p2p3_K12E = (fftw_complex *) malloc(bytes = sizeof(fftw_real) * TotalSizePlusAdditional);
+    p1p2p3_K12E  = (fftw_real *) cp1p2p3_K12E ;
+    ASSERT_ALLOC(cp1p2p3_K12E);
+    cp1p2p3_K12F = (fftw_complex *) malloc(bytes = sizeof(fftw_real) * TotalSizePlusAdditional);
+    p1p2p3_K12F  = (fftw_real *) cp1p2p3_K12F ;
+    ASSERT_ALLOC(cp1p2p3_K12F);
+    cp1p2p3_K12G = (fftw_complex *) malloc(bytes = sizeof(fftw_real) * TotalSizePlusAdditional);
+    p1p2p3_K12G  = (fftw_real *) cp1p2p3_K12G ;
+    ASSERT_ALLOC(cp1p2p3_K12G);
+#endif
+// ****  wrc ****
 // ******************* DSJ ***********************
 	  exp_1_over_3 = (4. - PrimordialIndex) / 3.; // n_s modified exponent for generalized laplacian/inverse laplacian, exponent for k^2
 	  exp_1_over_6 = (4. - PrimordialIndex) / 6.; // n_s modified exponent for generalized conjugate gradient magnitude and its inverse, exponent for k^2 
@@ -707,6 +756,13 @@ void displacement_fields(void) {
                 cp1p2p3nab[coord].im = 0;
                 cp1p2p3tre[coord].re = 0;
                 cp1p2p3tre[coord].im = 0;
+
+// ****  wrc ****
+#ifdef ORTOG_LSS_FNL
+                cp1p2p3inv[coord].re = 0;
+                cp1p2p3inv[coord].im = 0;
+#endif
+// ****  wrc ****
 		cpartpot[coord].re = 0;
 		cpartpot[coord].im = 0;
 	      }
@@ -750,6 +806,13 @@ void displacement_fields(void) {
                       
                       cp1p2p3nab[coord].re = kmag_2_over_3 * cpot[coord].re;
                       cp1p2p3nab[coord].im = kmag_2_over_3 * cpot[coord].im; 
+
+// ****  wrc ****
+#ifdef ORTOG_LSS_FNL
+                      cp1p2p3inv[coord].re =  cpot[coord].re/kmag_1_over_3;
+                      cp1p2p3inv[coord].im =  cpot[coord].im/kmag_1_over_3; 
+#endif
+// ****  wrc ****                  
 // ************************************ DSJ ********************************
             }
 
@@ -759,6 +822,12 @@ void displacement_fields(void) {
       rfftwnd_mpi(Inverse_plan, 1, pot, Workspace, FFTW_NORMAL_ORDER);
       rfftwnd_mpi(Inverse_plan, 1, partpot, Workspace, FFTW_NORMAL_ORDER);
       rfftwnd_mpi(Inverse_plan, 1, p1p2p3nab, Workspace, FFTW_NORMAL_ORDER);
+
+// ****  wrc ****
+#ifdef ORTOG_LSS_FNL
+      rfftwnd_mpi(Inverse_plan, 1, p1p2p3inv, Workspace, FFTW_NORMAL_ORDER);
+#endif
+// ****  wrc ****
       MPI_Barrier(MPI_COMM_WORLD);
 
       /* multiplying terms in real space  */
@@ -769,12 +838,21 @@ void displacement_fields(void) {
           for(k = 0; k < Nmesh; k++)
             {
              coord = (i * Nmesh + j) * (2 * (Nmesh / 2 + 1)) + k; 
-   
+
+// ****  wrc ****
+#ifdef ORTOG_LSS_FNL
+              p1p2p3_K12D[coord] = p1p2p3inv[coord]*p1p2p3inv[coord]; // 1/k phi 1/k phi
+              p1p2p3_K12E[coord] = p1p2p3nab[coord]*p1p2p3inv[coord];   //k^2 phi 1/k phi
+              p1p2p3_K12F[coord] = pot[coord]*p1p2p3inv[coord];   //phi 1/k phi
+              p1p2p3_K12G[coord] = partpot[coord]*p1p2p3inv[coord]; // k phi 1/k phk
+#endif
+// ****  wrc ****
               p1p2p3sym[coord] = partpot[coord]*partpot[coord];
               p1p2p3sca[coord] = pot[coord]*partpot[coord];   
               p1p2p3nab[coord] = pot[coord]*p1p2p3nab[coord];
               p1p2p3tre[coord] = p1p2p3nab[coord]*partpot[coord];
               partpot[coord] = pot[coord]*pot[coord];       /** NOTE: now partpot is potential squared **/
+
             }
 
       MPI_Barrier(MPI_COMM_WORLD);
@@ -784,6 +862,16 @@ void displacement_fields(void) {
       rfftwnd_mpi(Forward_plan, 1, p1p2p3sca, Workspace, FFTW_NORMAL_ORDER);
       rfftwnd_mpi(Forward_plan, 1, p1p2p3nab, Workspace, FFTW_NORMAL_ORDER);
       rfftwnd_mpi(Forward_plan, 1, p1p2p3tre, Workspace, FFTW_NORMAL_ORDER);
+
+// ****  wrc ****
+#ifdef ORTOG_LSS_FNL
+      rfftwnd_mpi(Forward_plan, 1, p1p2p3_K12D, Workspace, FFTW_NORMAL_ORDER);
+      rfftwnd_mpi(Forward_plan, 1, p1p2p3_K12E, Workspace, FFTW_NORMAL_ORDER);
+      rfftwnd_mpi(Forward_plan, 1, p1p2p3_K12F, Workspace, FFTW_NORMAL_ORDER);
+      rfftwnd_mpi(Forward_plan, 1, p1p2p3_K12G, Workspace, FFTW_NORMAL_ORDER);
+#endif
+
+// ****  wrc ****
       MPI_Barrier(MPI_COMM_WORLD);
 
        /* divide by appropiate k's, sum terms according to non-local model */ 
@@ -855,6 +943,14 @@ void displacement_fields(void) {
 // ****************************************************************************************** DSJ ********************************************************************************************************
 #endif
 
+// ****  wrc ****
+#ifdef ORTOG_LSS_FNL
+              cpot[coord].re += 3*Fnl * (-(1.0+1.0/3.0*orth_p) * cpartpot[coord].re - 1.0/3.0*(2.0+20./9.*orth_p) * cp1p2p3sym[coord].re / kmag_2_over_3 + 2.0*(1.0-5.0/9.0*orth_p)*(1.0-orth_t) * cp1p2p3sca[coord].re / kmag_1_over_3 + 2.0*(1.0-5.0/9.0*orth_p)*orth_t* cp1p2p3nab[coord].re / kmag_2_over_3);
+              cpot[coord].re += 3*Fnl * (orth_p/27.0 * cp1p2p3_K12D[coord].re*kmag_2_over_3 - 20.0*orth_p/27.0 * cp1p2p3_K12E[coord].re / kmag_1_over_3 - 4.0*orth_p/9.0 * cp1p2p3_K12F[coord].re * kmag_1_over_3 + 10.0/9.0*orth_p * cp1p2p3_K12G[coord].re );
+              cpot[coord].im += 3*Fnl * (-(1.0+1.0/3.0*orth_p) * cpartpot[coord].im - 1.0/3.0*(2.0+20./9.*orth_p) * cp1p2p3sym[coord].im / kmag_2_over_3 + 2.0*(1.0-5.0/9.0*orth_p)*(1.0-orth_t) * cp1p2p3sca[coord].im / kmag_1_over_3 + 2.0*(1.0-5.0/9.0*orth_p)*orth_t* cp1p2p3nab[coord].im / kmag_2_over_3);
+              cpot[coord].im += 3*Fnl * (orth_p/27.0 * cp1p2p3_K12D[coord].im*kmag_2_over_3 - 20.0*orth_p/27.0 * cp1p2p3_K12E[coord].im / kmag_1_over_3 - 4.0*orth_p/9.0 * cp1p2p3_K12F[coord].im * kmag_1_over_3 + 10.0/9.0*orth_p * cp1p2p3_K12G[coord].im );
+#endif
+// ****  wrc ****
               cpot[coord].re /= (double) nmesh3; 
               cpot[coord].im /= (double) nmesh3; 
 
@@ -865,6 +961,16 @@ void displacement_fields(void) {
       free(cp1p2p3sca);
       free(cp1p2p3nab);
       free(cp1p2p3tre);
+// ****  wrc ****
+#ifdef ORTOG_LSS_FNL
+      free(cp1p2p3inv);
+      free(cp1p2p3_K12D);
+      free(cp1p2p3_K12E);
+      free(cp1p2p3_K12F);
+      free(cp1p2p3_K12G);
+#endif
+// ****  wrc ****
+
 
       if (ThisTask == 0 ) print_timed_done(1);
   
