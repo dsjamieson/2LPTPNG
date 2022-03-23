@@ -28,7 +28,10 @@ OPT   +=  -DNO64BITID     # switch this on if you want normal 32-bit IDs
 #MODE = -DONLY_GAUSSIAN
 #MODE = -DLOCAL_FNL
 MODE = -DEQUIL_FNL
-#MODE = -DORTOG_FNL
+
+MODE = -DORTOG_FNL
+MODE = -DORTOG_LSS_FNL
+
 
 ifeq ($(MODE),-DONLY_GAUSSIAN)
 	EXEC:=2LPT
@@ -38,6 +41,8 @@ else ifeq ($(MODE),-DEQUIL_FNL)
 	EXEC:=2LPTNGEQ
 else ifeq ($(MODE),-DORTOG_FNL)
 	EXEC:=2LPTNGOR
+else ifeq ($(MODE),-DORTOG_LSS_FNL)
+	EXEC:=2LPTNGORLSS
 endif
 OPT += $(MODE)
 OPTIONS =  $(OPT)

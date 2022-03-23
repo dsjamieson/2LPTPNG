@@ -63,4 +63,3 @@ void save_local_data(void);
 void add_WDM_thermal_speeds(float *vel);
 
 int compare_type(const void *a, const void *b);
-

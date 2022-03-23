@@ -6,7 +6,6 @@
 
 
 
-
 void write_particle_data(void)
 {
   int nprocgroup, groupTask, masterTask;
