@@ -6,6 +6,63 @@
 
 
 
+//wrc
+void write_phi(fftw_complex * cpot, int isNonGaus)
+{
+    // int i,j,k;
+    // for(i = 0; i < Local_nx; i++)
+    //   for(j = 0; j < Nmesh; j++)
+    //     for(k = 0; k <= Nmesh / 2 ; k++)
+    //       {
+    //         coord = (i * Nmesh + j) * (Nmesh / 2 + 1) + k;
+
+    //         cpot_will[coord].re = cpot[coord].re;
+    //         cpot_will[coord].im = cpot[coord].im;
+    //       }
+
+    char buf_will[300];
+    FILE *write_ptr;
+
+    if (isNonGaus==0)
+    {
+      if(NTaskWithN > 1)
+        sprintf(buf_will, "%s/%s_gaus_potential_%d_NumX_%d_StartX_%d", OutputDir, FileBase,Seed,Local_nx, Local_x_start);
+      else
+        sprintf(buf_will, "%s/%s_gaus_potential_%d", OutputDir, FileBase,Seed);
+      if(!(write_ptr = fopen(buf_will, "w")))
+        {
+          printf("Error. Can't write in file '%s'\n", buf_will);
+          FatalError(10);
+        }
+    }
+    else
+    {
+      if(NTaskWithN > 1)
+        sprintf(buf_will, "%s/%s_nonGaus_potential_%d_NumX_%d_StartX_%d", OutputDir, FileBase,Seed,Local_nx, Local_x_start);
+      else
+        sprintf(buf_will, "%s/%s_nonGaus_potential_%d", OutputDir, FileBase,Seed);
+      if(!(write_ptr = fopen(buf_will, "w")))
+        {
+          printf("Error. Can't write in file '%s'\n", buf_will);
+          FatalError(10);
+        }
+    }
+    // printf("NumX_%d_StartX_%d", Local_nx, Local_x_start);
+    // printf("%e %e  \n",cpot[0].re,cpot[0].im);
+    // printf("%e %e  \n",cpot[1].re,cpot[1].im);
+    // printf("%e %e  \n",cpot[Nmesh/2-1].re,cpot[Nmesh/2-1].im);
+    // printf("%e %e  \n",cpot[Nmesh/2].re,cpot[Nmesh/2].im);
+    // printf("%e %e  \n",cpot[Nmesh/2+1].re,cpot[Nmesh/2+1].im);
+    // printf("%e %e  \n",cpot[Nmesh+10].re,cpot[Nmesh+10].im);
+    printf("Size grid: %d  \n",TotalSizePlusAdditional);
+    my_fwrite(&TotalSizePlusAdditional,sizeof(TotalSizePlusAdditional), 1, write_ptr);
+    my_fwrite(&Nmesh,sizeof(Nmesh),1,write_ptr);
+    my_fwrite(&Box,sizeof(Box),1,write_ptr);
+    my_fwrite(cpot, sizeof(fftw_real)*TotalSizePlusAdditional, 1, write_ptr);
+    fclose(write_ptr);
+
+}
+
 
 void write_particle_data(void)
 {

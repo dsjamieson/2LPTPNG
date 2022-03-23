@@ -25,7 +25,7 @@ HubbleParam      0.7       % Hubble paramater (may be used for power spec parame
 Redshift         49.       % Starting redshift
 Sigma8           0.8       % power spectrum normalization
 PrimordialIndex  1.0       % may be used to tilt the primordial index, needed for nongaussian inital potential
-Fnl              0.0       % value of the f_nl for Local,Equilateral or Orthogonal 
+Fnl              100.0       % value of the f_nl for Local,Equilateral or Orthogonal 
                            % normalized as in Scoccimarro Hui Manera Chan 2011  
 Seed             5001      %  Seed for IC-generator
 
@@ -49,7 +49,7 @@ FileWithInputSpectrum    /mnt/home/wcoulton/PNG/2LPTPNG-LSS-ORTH/inputs/input_sp
 FileWithInputTransfer    /mnt/home/wcoulton/PNG/2LPTPNG-LSS-ORTH/inputs/input_transfer.dat  
 ShapeGamma               0.21     % only needed for Efstathiou power spectrum 
                                                                                                                                           
-NumFilesWrittenInParallel 4  % limits the number of files that are written in parallel when outputting
+NumFilesWrittenInParallel 1  % limits the number of files that are written in parallel when outputting
 
 InputSpectrum_UnitLength_in_cm  3.085678e24  % defines length unit of tabulated power spectrum/transfer function
 UnitLength_in_cm                3.085678e24  % defines length unit of output (in cm/h) 

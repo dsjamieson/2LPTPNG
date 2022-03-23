@@ -174,8 +174,8 @@ void displacement_fields(void) {
   fftw_real *(p1p2p3_K12F);
   fftw_complex *(cp1p2p3_K12G);
   fftw_real *(p1p2p3_K12G);
-  double orth_p = 27/(-21+743/(7*(20*pow(PI,2)-193)));
-  double orth_t = (2+20/9*orth_p)/(6+10/3*orth_p);
+  double orth_p = 27.0/(-21.0+743.0/(7*(20.0*pow(PI,2.0)-193.0)));
+  double orth_t = (2.0+20.0/9.0*orth_p)/(6*(1.0+5.0/9.0*orth_p));
 #endif
 // ****  wrc ****
 #endif
@@ -599,7 +599,9 @@ void displacement_fields(void) {
         }
 
      if (ThisTask == 0 ) print_timed_done(19);
-
+     //wrc
+     write_phi(cpot, 0);
+     MPI_Barrier(MPI_COMM_WORLD);
      /*** For non-local models it is important to keep all factors of SQRT(-1) as done below ***/
      /*** Notice also that there is a minus to convert from Bardeen to gravitational potential ***/
 
@@ -809,6 +811,10 @@ void displacement_fields(void) {
 
 // ****  wrc ****
 #ifdef ORTOG_LSS_FNL
+                      if(i == 0 && j == 0 && k == 0)
+                      {
+                          continue;
+                      }
                       cp1p2p3inv[coord].re =  cpot[coord].re/kmag_1_over_3;
                       cp1p2p3inv[coord].im =  cpot[coord].im/kmag_1_over_3; 
 #endif
@@ -945,9 +951,9 @@ void displacement_fields(void) {
 
 // ****  wrc ****
 #ifdef ORTOG_LSS_FNL
-              cpot[coord].re += 3*Fnl * (-(1.0+1.0/3.0*orth_p) * cpartpot[coord].re - 1.0/3.0*(2.0+20./9.*orth_p) * cp1p2p3sym[coord].re / kmag_2_over_3 + 2.0*(1.0-5.0/9.0*orth_p)*(1.0-orth_t) * cp1p2p3sca[coord].re / kmag_1_over_3 + 2.0*(1.0-5.0/9.0*orth_p)*orth_t* cp1p2p3nab[coord].re / kmag_2_over_3);
+              cpot[coord].re += 3*Fnl * (-(1.0+1.0/3.0*orth_p) * cpartpot[coord].re - 1.0/3.0*(2.0+20./9.*orth_p) * cp1p2p3sym[coord].re / kmag_2_over_3 + 2.0*(1.0+5.0/9.0*orth_p)*(1.0-orth_t) * cp1p2p3sca[coord].re / kmag_1_over_3 + 2.0*(1.0+5.0/9.0*orth_p)*orth_t* cp1p2p3nab[coord].re / kmag_2_over_3);
               cpot[coord].re += 3*Fnl * (orth_p/27.0 * cp1p2p3_K12D[coord].re*kmag_2_over_3 - 20.0*orth_p/27.0 * cp1p2p3_K12E[coord].re / kmag_1_over_3 - 4.0*orth_p/9.0 * cp1p2p3_K12F[coord].re * kmag_1_over_3 + 10.0/9.0*orth_p * cp1p2p3_K12G[coord].re );
-              cpot[coord].im += 3*Fnl * (-(1.0+1.0/3.0*orth_p) * cpartpot[coord].im - 1.0/3.0*(2.0+20./9.*orth_p) * cp1p2p3sym[coord].im / kmag_2_over_3 + 2.0*(1.0-5.0/9.0*orth_p)*(1.0-orth_t) * cp1p2p3sca[coord].im / kmag_1_over_3 + 2.0*(1.0-5.0/9.0*orth_p)*orth_t* cp1p2p3nab[coord].im / kmag_2_over_3);
+              cpot[coord].im += 3*Fnl * (-(1.0+1.0/3.0*orth_p) * cpartpot[coord].im - 1.0/3.0*(2.0+20./9.*orth_p) * cp1p2p3sym[coord].im / kmag_2_over_3 + 2.0*(1.0+5.0/9.0*orth_p)*(1.0-orth_t) * cp1p2p3sca[coord].im / kmag_1_over_3 + 2.0*(1.0+5.0/9.0*orth_p)*orth_t* cp1p2p3nab[coord].im / kmag_2_over_3);
               cpot[coord].im += 3*Fnl * (orth_p/27.0 * cp1p2p3_K12D[coord].im*kmag_2_over_3 - 20.0*orth_p/27.0 * cp1p2p3_K12E[coord].im / kmag_1_over_3 - 4.0*orth_p/9.0 * cp1p2p3_K12F[coord].im * kmag_1_over_3 + 10.0/9.0*orth_p * cp1p2p3_K12G[coord].im );
 #endif
 // ****  wrc ****
@@ -975,7 +981,9 @@ void displacement_fields(void) {
       if (ThisTask == 0 ) print_timed_done(1);
   
 #endif
-
+     //wrc
+     write_phi(cpot, 1);
+     MPI_Barrier(MPI_COMM_WORLD);
   if (ThisTask == 0) {printf("Computing gradient of non-Gaussian potential..."); fflush(stdout);};
 
     /****** FINISHED NON LOCAL POTENTIAL OR LOCAL FNL, STILL IN NONGAUSSIAN SECTION ****/   
