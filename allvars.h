@@ -1,4 +1,4 @@
-#include <rfftw_mpi.h>
+#include <drfftw_mpi.h>
 #include <time.h>
 
 #define  PI          3.14159265358979323846 
