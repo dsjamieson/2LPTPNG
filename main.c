@@ -599,9 +599,6 @@ void displacement_fields(void) {
         }
 
      if (ThisTask == 0 ) print_timed_done(19);
-     //wrc
-     write_phi(cpot, 0);
-     MPI_Barrier(MPI_COMM_WORLD);
      /*** For non-local models it is important to keep all factors of SQRT(-1) as done below ***/
      /*** Notice also that there is a minus to convert from Bardeen to gravitational potential ***/
 
@@ -981,9 +978,7 @@ void displacement_fields(void) {
       if (ThisTask == 0 ) print_timed_done(1);
   
 #endif
-     //wrc
-     write_phi(cpot, 1);
-     MPI_Barrier(MPI_COMM_WORLD);
+
   if (ThisTask == 0) {printf("Computing gradient of non-Gaussian potential..."); fflush(stdout);};
 
     /****** FINISHED NON LOCAL POTENTIAL OR LOCAL FNL, STILL IN NONGAUSSIAN SECTION ****/   
